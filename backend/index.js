@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
-
 const cors = require('cors');
-
+const socket = require('socket.io')
 const PORT = 5000;
-const socket = require('socket.io').listen(PORT)
+
+
 app.use(cors({origin : 'http://localhost:3000'}));
 app.get('/test', (req, res) => res.send('yes ok '))
 
