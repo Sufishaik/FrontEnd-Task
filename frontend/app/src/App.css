@@ -189,3 +189,9 @@ body {
 .hide {
   opacity: 0 !important;
 }
+
+.quill {
+  width: 420px;
+  background-color: #333;
+ 
+}

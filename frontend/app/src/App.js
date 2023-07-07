@@ -1,107 +1,91 @@
-import "./App.css";
+// import React from 'react'
+// import Chat from './Chat/Chat'
 
-import { useEffect, useState } from "react";
-// import io from "socket.io-client";
+// function App() {
+//   return (
+//     <div>
+//       <Chat/>
+//     </div>
+//   )
+// }
 
-import "./Chat/Style.css";
-import socket from "./io";
+// export default App
 
-// const socket = io("http://localhost:5000");
-
+import React, { useState } from 'react'
+import ScrollToBottom from "react-scroll-to-bottom";
+// import 'emoji-mart/css/emoji-mart.css';
+import { Picker } from 'emoji-mart';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import "./App.css"
 function App() {
-  const [showChat, setShowChat] = useState(false);
-  const [messageList, setMessageList] = useState([]);
-  const [inputField, setinputField] = useState({
-    username: '',
-    room: '',
-    currentMessage: '',
-  })
-  const handleInput = (e) => {
-    setinputField({
-      ...inputField,
-      [e.target.name]: e.target.value
-    })
-  }
-  const joinRoom = () => {
-    socket.emit('join', inputField.room)
-    setShowChat(true)
+  const [text, setText] = useState('');
+
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const toggleEmojiPicker = () => {
+    setShowEmojiPicker(!showEmojiPicker);
   };
-  useEffect(() => {
-    socket.on('receive', (data) => {
-      setMessageList([...messageList, data]);
-    })
-  })
-  const sendMessage = async () => {
-    console.log(inputField)
-    await socket.emit('sent_message', inputField);
-    setMessageList([...messageList, inputField])
-  }
 
- console.log(messageList)
+  const handleEmojiSelect = (emoji) => {
+    setText(text + emoji.native);
+    // setinputField(inputField.currentMessage + emoji.native)
+  };
+
+  const modules = {
+    toolbar: [
+      // [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'strike', 'link'],
+      [{ 'list': 'bullet' }, { 'list': 'ordered' }],
+      ['white', 'code-block'],
+      ['file-upload']
+      ['image'],
+      ['emoji'],
+      [{ 'mention': { 'allowedChars': /^[A-Za-z\sÅÄÖåäö]*$/, 'mentionDenotationChars': ['@'], } }],
+    ],
+   
+  };
+  const modules2 = {
+    toolbar: [
+      // [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'strike', 'link'],
+      [{ 'list': 'bullet' }, { 'list': 'ordered' }],
+      ['white', 'code-block'],
+      ['file-upload']
+      ['image'],
+      ['emoji'],
+      [{ 'mention': { 'allowedChars': /^[A-Za-z\sÅÄÖåäö]*$/, 'mentionDenotationChars': ['@'], } }],
+    ],
+   
+  };
+
+  const formats = [
+    
+    'mention'
+  ];
+  const formats2 = [
+    
+    'mention'
+  ];
+
   return (
-    <>
-
-      <div className="App">
-        {!showChat ? (
-          <div className="joinChatContainer">
-            <h3>Join A Chat</h3>
-            <input
-              type="text"
-              name="username"
-              placeholder="John..."
-              onChange={handleInput}
-            />
-            <input
-              type="text"
-              name="room"
-              placeholder="Room ID..."
-              onChange={handleInput}
-
-            />
-            <button onClick={joinRoom}>Join A Room</button>
-          </div>
-        ) : (
-
-          <div className="chat-window">
-            <div className="chat-header">
-              <p>Live Chat</p>
-            </div>
-            <div className="chat-body">
-
-              {/* {messageList.map((messageContent) => {
-
-                return (
-                  <div
-                    className="message"
-                  >
-                    <div>
-                      <div className="message-content">
-                        <p>{messageContent}</p>
-                      </div>
-
-                    </div>
-                  </div>
-                );
-              })} */}
-
-            </div>
-            <div className="chat-footer">
-              <input
-                type="text"
-                name="currentMessage"
-                
-                placeholder="Hey..."
-                onChange={handleInput}
-
+    <div>
+       <div>
+                {/* <button onClick={toggleEmojiPicker}>😊</button> */}
+                {/* {showEmojiPicker && <Picker onSelect={handleEmojiSelect} />} */}
+              </div>
+              <ReactQuill
+                value={text}
+                onChange={setText}
+                modules={modules}
+                className='quill'
+                formats={formats}
+                placeholder="Type your message here..."
               />
-              <button onClick={sendMessage}>&#9658;</button>
-            </div>
-          </div>
-        )}
-      </div>
-    </>
+              <button onClick={() => setText('')}>Clear</button>
+              
+    </div>
   )
-
 }
-export default App;
 
+export default App
